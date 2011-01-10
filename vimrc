@@ -85,6 +85,8 @@ set foldmethod=marker           " detect triple-{ style fold markers
 set foldlevelstart=0            " start out with everything folded
 set foldopen=block,hor,insert,jump,mark,percent,quickfix,search,tag,undo
                                 " which commands trigger auto-unfold
+no zh zj
+no zt zk
 function! MyFoldText()
     let line = getline(v:foldstart)
 
@@ -164,7 +166,8 @@ endfunction
 
 " Highlighting {{{
 if &t_Co >= 256 || has("gui_running")
-   colorscheme molokai
+   "colorscheme molokai
+   colorscheme ir_black
 endif
 
 if &t_Co > 2 || has("gui_running")
@@ -207,14 +210,10 @@ nnoremap ` '
 " map <right> <nop>
 
 " Remap j and k to act as expected when used on long, wrapped, lines
-nnoremap j gj
-nnoremap k gk
+nnoremap h gj
+nnoremap t gk
 
 " Easy window navigation
-map <C-h> <C-w>h
-map <C-j> <C-w>j
-map <C-k> <C-w>k
-map <C-l> <C-w>l
 nnoremap <leader>w <C-w>v<C-w>l
 
 " Complete whole filenames/lines with a quicker shortcut key in insert mode
@@ -248,8 +247,8 @@ nmap <silent> <leader>/ :nohlsearch<CR>
 
 " Quickly get out of insert mode without your fingers having to leave the
 " home row (either use 'jj' or 'jk')
-inoremap jj <Esc>
-inoremap jk <Esc>
+inoremap hh <Esc>
+inoremap ht <Esc>
 
 " Quick alignment of text
 nmap <leader>al :left<CR>
@@ -414,9 +413,6 @@ if has("autocmd")
         let g:closetag_default_xml=1
         autocmd filetype html,htmldjango let b:closetag_html_style=1
         autocmd filetype html,xhtml,xml source ~/.vim/scripts/closetag.vim
-
-        " Enable Sparkup for lightning-fast HTML editing
-        let g:sparkupExecuteMapping = '<leader>e'
     augroup end " }}}
 
     augroup python_files "{{{
@@ -561,12 +557,13 @@ iab llorem Lorem ipsum dolor sit amet, consectetur adipiscing elit.  Etiam lacus
 iab lllorem Lorem ipsum dolor sit amet, consectetur adipiscing elit.  Etiam lacus ligula, accumsan id imperdiet rhoncus, dapibus vitae arcu.  Nulla non quam erat, luctus consequat nisi.  Integer hendrerit lacus sagittis erat fermentum tincidunt.  Cras vel dui neque.  In sagittis commodo luctus.  Mauris non metus dolor, ut suscipit dui.  Aliquam mauris lacus, laoreet et consequat quis, bibendum id ipsum.  Donec gravida, diam id imperdiet cursus, nunc nisl bibendum sapien, eget tempor neque elit in tortor
 
 if has("gui_running")
-    set guifont=Inconsolata:h14
+    set gfn=Terminus\ Medium\ 12
     "colorscheme baycomb
     "colorscheme mustang
-    colorscheme molokai
+    colorscheme ir_black
 
     " Remove toolbar, left scrollbar and right scrollbar
+    set guioptions-=m  "remove menu bar
     set guioptions-=T
     set guioptions-=l
     set guioptions-=L
@@ -582,3 +579,23 @@ if has("gui_running")
     endfunction
     command! -bang -nargs=0 ScreenRecordMode call ScreenRecordMode()
 endif
+
+no d h
+no h j
+no t k
+no n l
+no s :
+no S :
+no j d
+no l n
+no L N
+no N <C-w><C-w>
+no H 8<Down>
+no T 8<Up>
+no D <C-w><C-r>
+
+
+au BufNewFile,BufRead *.soy set filetype=html
+
+highlight OverLength ctermbg=darkgray guibg=#FFD9D9
+match OverLength /\%>79v.\+/
